@@ -40,16 +40,16 @@ module.exports = ({
     options = options || {}
 
     if (typeof constructorOptions.init === 'object') {
-      options = mergeOptions(options, constructorOptions.init)
+      options = mergeOptions(constructorOptions.init, options)
     }
 
-    if (constructorOptions.pass) {
-      options.pass = constructorOptions.pass
-    }
+    options.pass = options.pass || constructorOptions.pass
 
     if (constructorOptions.config) {
-      options.config = constructorOptions.config
+      options.config = mergeOptions(options.config, constructorOptions.config)
     }
+
+    options.repo = options.repo || constructorOptions.repo
 
     const repo = typeof options.repo === 'string' || options.repo == null
       ? createRepo({ path: options.repo, autoMigrate: options.repoAutoMigrate })
@@ -281,14 +281,14 @@ async function addEmptyDir ({ dag }) {
 
 // Apply profiles (e.g. ['server', 'lowpower']) to config
 function applyProfiles (profiles, config) {
-  return (profiles || []).reduce((name, config) => {
+  return (profiles || []).reduce((config, name) => {
     const profile = require('./config').profiles[name]
     if (!profile) {
       throw new Error(`No profile with name '${name}'`)
     }
     log('applying profile %s', name)
     return profile.transform(config)
-  })
+  }, config)
 }
 
 function createApi ({
