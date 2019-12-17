@@ -4,6 +4,10 @@ const multibase = require('multibase')
 const Joi = require('@hapi/joi')
 const Boom = require('@hapi/boom')
 const isIpfs = require('is-ipfs')
+const toStream = require('it-to-stream')
+const { map } = require('streaming-iterables')
+const pipe = require('it-pipe')
+const ndjson = require('iterable-ndjson')
 const { cidToString } = require('../../../utils/cid')
 
 function parseArgs (request, h) {
@@ -53,20 +57,13 @@ exports.ls = {
     const { ipfs } = request.server.app
     const { path, type } = request.pre.args
 
-    let result
-    try {
-      result = await ipfs.pin.ls(path, { type })
-    } catch (err) {
-      throw Boom.boomify(err)
-    }
+    const response = pipe(
+      ipfs.pin.ls(path, { type }),
+      map(({ type, cid }) => ({ Type: type, Hash: cidToString(cid, { base: request.query['cid-base'] }) })),
+      ndjson.stringify
+    )
 
-    return h.response({
-      Keys: result.reduce((acc, v) => {
-        const prop = cidToString(v.hash, { base: request.query['cid-base'] })
-        acc[prop] = { Type: v.type }
-        return acc
-      }, {})
-    })
+    return h.response(toStream.readable(response))
   }
 }
 
@@ -94,7 +91,7 @@ exports.add = {
     }
 
     return h.response({
-      Pins: result.map(obj => cidToString(obj.hash, { base: request.query['cid-base'] }))
+      Pins: result.map(obj => cidToString(obj.cid, { base: request.query['cid-base'] }))
     })
   }
 }
@@ -120,7 +117,7 @@ exports.rm = {
     }
 
     return h.response({
-      Pins: result.map(obj => cidToString(obj.hash, { base: request.query['cid-base'] }))
+      Pins: result.map(obj => cidToString(obj.cid, { base: request.query['cid-base'] }))
     })
   }
 }

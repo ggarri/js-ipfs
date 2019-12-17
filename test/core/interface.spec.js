@@ -2,7 +2,6 @@
 'use strict'
 
 const tests = require('interface-ipfs-core')
-const { isNode } = require('ipfs-utils/src/env')
 const merge = require('merge-options')
 const { createFactory } = require('ipfsd-ctl')
 const IPFS = require('../../src')
@@ -49,17 +48,7 @@ describe('interface-ipfs-core tests', function () {
     }
   })
 
-  tests.filesRegular(commonFactory, {
-    skip: isNode ? null : [{
-      name: 'addFromStream',
-      reason: 'Not designed to run in the browser'
-    }, {
-      name: 'addFromFs',
-      reason: 'Not designed to run in the browser'
-    }]
-  })
-
-  tests.filesMFS(commonFactory)
+  tests.files(commonFactory)
 
   tests.key(commonFactory)
 

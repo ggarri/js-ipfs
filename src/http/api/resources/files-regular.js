@@ -15,7 +15,7 @@ const multibase = require('multibase')
 const isIpfs = require('is-ipfs')
 const promisify = require('promisify-es6')
 const { cidToString } = require('../../../utils/cid')
-const { Format } = require('../../../core/components/files-regular/refs')
+const { Format } = require('../../../core/components/refs')
 const pipe = require('it-pipe')
 
 function numberFromQuery (query, key) {
@@ -210,7 +210,7 @@ exports.add = {
         }
       },
       function (source) {
-        return ipfs._addAsyncIterator(source, {
+        return ipfs.add(source, {
           cidVersion: request.query['cid-version'],
           rawLeaves: request.query['raw-leaves'],
           progress: request.query.progress ? progressHandler : null,
@@ -233,7 +233,7 @@ exports.add = {
         for await (const file of source) {
           output.write(JSON.stringify({
             Name: file.path,
-            Hash: cidToString(file.hash, { base: request.query['cid-base'] }),
+            Hash: cidToString(file.cid, { base: request.query['cid-base'] }),
             Size: file.size
           }) + '\n')
         }

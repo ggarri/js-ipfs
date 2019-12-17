@@ -11,7 +11,6 @@ log.error = debug('ipfs:ipns:error')
 const IpnsPublisher = require('./publisher')
 const IpnsRepublisher = require('./republisher')
 const IpnsResolver = require('./resolver')
-const path = require('./path')
 const { normalizePath } = require('../utils')
 const TLRU = require('../../utils/tlru')
 const defaultRecordTtl = 60 * 1000
@@ -93,7 +92,5 @@ class IPNS {
     return this.publish(privKey, value, IpnsPublisher.defaultRecordLifetime)
   }
 }
-
-IPNS.path = path
 
 module.exports = IPNS
