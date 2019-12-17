@@ -42,7 +42,7 @@ async function create (options) {
   const apiManager = new ApiManager()
 
   const { api } = apiManager.update({
-    init: Components.init({ apiManager, print, constructorOptions: options }),
+    init: Components.init({ apiManager, print, options }),
     dns: Components.dns(),
     isOnline: Components.isOnline({})
   }, () => { throw new NotInitializedError() })

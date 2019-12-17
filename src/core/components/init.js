@@ -4,7 +4,6 @@ const log = require('debug')('ipfs:components:init')
 const PeerId = require('peer-id')
 const PeerInfo = require('peer-info')
 const mergeOptions = require('merge-options')
-const promisify = require('promisify-es6')
 const getDefaultConfig = require('../runtime/config-nodejs.js')
 const createRepo = require('../runtime/repo-nodejs')
 const Keychain = require('libp2p-keychain')
@@ -72,7 +71,7 @@ module.exports = ({
 
     const { peerId, config, keychain } = isInitialized
       ? await initExistingRepo(repo, options)
-      : await initNewRepo(repo, options)
+      : await initNewRepo(repo, { ...options, print })
 
     log('peer created')
     const peerInfo = new PeerInfo(peerId)
@@ -242,7 +241,7 @@ async function initExistingRepo (repo, { config: newConfig, profiles, pass }) {
     log('keychain constructed')
   }
 
-  const peerId = await promisify(PeerId.createFromPrivKey)(config.Identity.PrivKey)
+  const peerId = await PeerId.createFromPrivKey(config.Identity.PrivKey)
 
   // Import the private key as 'self', if needed.
   if (pass) {
@@ -262,11 +261,11 @@ function createPeerId ({ privateKey, bits, print }) {
     log('using user-supplied private-key')
     return typeof privateKey === 'object'
       ? privateKey
-      : promisify(PeerId.createFromPrivKey)(Buffer.from(privateKey, 'base64'))
+      : PeerId.createFromPrivKey(Buffer.from(privateKey, 'base64'))
   } else {
     // Generate peer identity keypair + transform to desired format + add to config.
     print('generating %s-bit RSA keypair...', bits)
-    return promisify(PeerId.create)({ bits })
+    return PeerId.create({ bits })
   }
 }
 

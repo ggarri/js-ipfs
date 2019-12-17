@@ -32,6 +32,8 @@ describe('interface-ipfs-core tests', function () {
   }
   const commonFactory = createFactory(commonOptions, overrides)
 
+  tests.root(commonFactory)
+
   tests.bitswap(commonFactory)
 
   tests.block(commonFactory)
