@@ -108,6 +108,11 @@ function createApi ({
 
   const api = {
     add,
+    bitswap: {
+      stat: () => Promise.reject(new NotStartedError()),
+      unwant: () => Promise.reject(new NotStartedError()),
+      wantlist: () => Promise.reject(new NotStartedError())
+    },
     block: {
       get: Components.block.get({ blockService, preload }),
       put: Components.block.put({ blockService, gcLock, preload }),
@@ -121,6 +126,7 @@ function createApi ({
     },
     cat: Components.cat({ ipld, preload }),
     config: Components.config({ repo }),
+    dag,
     dns: Components.dns(),
     files: Components.files({ ipld, blockService, repo, preload, options: constructorOptions }),
     get: Components.get({ ipld, preload }),

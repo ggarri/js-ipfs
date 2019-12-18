@@ -6,6 +6,7 @@ const { DAGNode } = require('ipld-dag-pb')
 const { normalizeCidPath } = require('../../utils')
 const { Errors } = require('interface-datastore')
 const ERR_NOT_FOUND = Errors.notFoundError().code
+const { withTimeoutOption } = require('../../utils')
 
 const Format = {
   default: '<dst>',
@@ -13,7 +14,7 @@ const Format = {
 }
 
 module.exports = function ({ ipld, resolve, preload }) {
-  return async function * refs (ipfsPath, options) { // eslint-disable-line require-await
+  return withTimeoutOption(async function * refs (ipfsPath, options) { // eslint-disable-line require-await
     options = options || {}
 
     if (options.maxDepth === 0) {
@@ -36,7 +37,7 @@ module.exports = function ({ ipld, resolve, preload }) {
     for (const path of paths) {
       yield * refsStream(resolve, ipld, path, options)
     }
-  }
+  })
 }
 
 module.exports.Format = Format

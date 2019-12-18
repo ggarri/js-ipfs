@@ -167,6 +167,7 @@ function createApi ({
     },
     cat: Components.cat({ ipld, preload }),
     config: Components.config({ repo }),
+    dag,
     dns,
     files: Components.files({ ipld, blockService, repo, preload, options: constructorOptions }),
     get: Components.get({ ipld, preload }),

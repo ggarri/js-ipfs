@@ -314,6 +314,11 @@ function createApi ({
 
   const api = {
     add,
+    bitswap: {
+      stat: () => Promise.reject(new NotStartedError()),
+      unwant: () => Promise.reject(new NotStartedError()),
+      wantlist: () => Promise.reject(new NotStartedError())
+    },
     bootstrap: {
       add: Components.bootstrap.add({ repo }),
       list: Components.bootstrap.list({ repo }),

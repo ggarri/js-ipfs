@@ -4,7 +4,7 @@ const isIpfs = require('is-ipfs')
 const CID = require('cids')
 const TimeoutController = require('timeout-abort-controller')
 const anySignal = require('any-signal')
-const { cidToString } = require('../utils/cid')
+const parseDuration = require('parse-duration')
 const { TimeoutError } = require('./errors')
 
 const ERR_BAD_PATH = 'ERR_BAD_PATH'
@@ -152,7 +152,7 @@ const mapFile = (file, options) => {
   }
 
   const output = {
-    hash: cidToString(file.cid, { base: options.cidBase }),
+    cid: file.cid,
     path: file.path,
     name: file.name,
     depth: file.path.split('/').length,
@@ -161,7 +161,7 @@ const mapFile = (file, options) => {
   }
 
   if (options.includeContent && file.unixfs && file.unixfs.type === 'file') {
-    output.content = file.content
+    output.content = file.content()
   }
 
   return output
@@ -172,8 +172,9 @@ function withTimeoutOption (fn, optionsArgIndex) {
     const options = args[optionsArgIndex == null ? args.length - 1 : optionsArgIndex]
     if (!options || !options.timeout) return fn(...args)
 
-    const controller = new TimeoutController(options.timeout)
-    if (options.signal) options.signal.addEventListener('abort', () => controller.clear())
+    const timeout = typeof value === 'string' ? parseDuration(options.timeout) : options.timeout
+    const controller = new TimeoutController(timeout)
+
     options.signal = anySignal([options.signal, controller.signal])
 
     const fnRes = fn(...args)
