@@ -62,6 +62,7 @@ exports.pin = {
   rm: require('./pin/rm')
 }
 exports.ping = require('./ping')
+exports.pubsub = require('./pubsub')
 exports.refs = require('./refs')
 exports.refs.local = require('./refs/local')
 exports.repo = {
@@ -71,6 +72,9 @@ exports.repo = {
 }
 exports.resolve = require('./resolve')
 exports.start = require('./start')
+exports.stats = {
+  bw: require('./stats/bw')
+}
 exports.stop = require('./stop')
 exports.swarm = {
   addrs: require('./swarm/addrs'),
