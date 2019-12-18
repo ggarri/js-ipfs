@@ -128,6 +128,7 @@ function createApi ({
     init: () => { throw new AlreadyInitializedError() },
     isOnline: Components.isOnline({}),
     ls: Components.ls({ ipld, preload }),
+    object,
     pin,
     refs,
     repo: {

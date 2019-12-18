@@ -174,6 +174,7 @@ function createApi ({
     init: () => { throw new AlreadyInitializedError() },
     ls: Components.ls({ ipld, preload }),
     name,
+    object,
     pin,
     ping: Components.ping({ libp2p }),
     pubsub: libp2p.pubsub

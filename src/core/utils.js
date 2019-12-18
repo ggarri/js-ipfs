@@ -2,7 +2,10 @@
 
 const isIpfs = require('is-ipfs')
 const CID = require('cids')
+const TimeoutController = require('timeout-abort-controller')
+const anySignal = require('any-signal')
 const { cidToString } = require('../utils/cid')
+const { TimeoutError } = require('./errors')
 
 const ERR_BAD_PATH = 'ERR_BAD_PATH'
 exports.OFFLINE_ERROR = 'This command must be run in online mode. Try running \'ipfs daemon\' first.'
@@ -164,8 +167,59 @@ const mapFile = (file, options) => {
   return output
 }
 
+function withTimeoutOption (fn, optionsArgIndex) {
+  return (...args) => {
+    const options = args[optionsArgIndex == null ? args.length - 1 : optionsArgIndex]
+    if (!options || !options.timeout) return fn(...args)
+
+    const controller = new TimeoutController(options.timeout)
+    if (options.signal) options.signal.addEventListener('abort', () => controller.clear())
+    options.signal = anySignal([options.signal, controller.signal])
+
+    const fnRes = fn(...args)
+    const timeoutPromise = new Promise((resolve, reject) => {
+      controller.signal.addEventListener('abort', () => reject(new TimeoutError()))
+    })
+
+    if (fnRes[Symbol.asyncIterator]) {
+      return (async function * () {
+        const it = fnRes[Symbol.asyncIterator]()
+        try {
+          while (true) {
+            const { value, done } = await Promise.race([it.next(), timeoutPromise])
+            if (done) break
+
+            controller.clear()
+            yield value
+            controller.reset()
+          }
+        } catch (err) {
+          if (controller.signal.aborted) throw new TimeoutError()
+          throw err
+        } finally {
+          controller.clear()
+          if (it.return) it.return()
+        }
+      })()
+    }
+
+    return (async () => {
+      try {
+        const res = await Promise.race([fnRes, timeoutPromise])
+        return res
+      } catch (err) {
+        if (controller.signal.aborted) throw new TimeoutError()
+        throw err
+      } finally {
+        controller.clear()
+      }
+    })()
+  }
+}
+
 exports.normalizePath = normalizePath
 exports.normalizeCidPath = normalizeCidPath
 exports.parseIpfsPath = parseIpfsPath
 exports.resolvePath = resolvePath
 exports.mapFile = mapFile
+exports.withTimeoutOption = withTimeoutOption

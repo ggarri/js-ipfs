@@ -62,7 +62,7 @@ function transformFile (dag, opts) {
       if (opts.onlyHash) {
         yield {
           cid,
-          path: path || cid.toString(),
+          path: path || (opts.wrapWithDirectory ? '' : cid.toString()),
           size: unixfs.fileSize()
         }
 
@@ -73,7 +73,7 @@ function transformFile (dag, opts) {
 
       yield {
         cid,
-        path: path || cid.toString(),
+        path: path || (opts.wrapWithDirectory ? '' : cid.toString()),
         size: Buffer.isBuffer(node) ? node.length : node.size
       }
     }

@@ -8,7 +8,7 @@ const IPFS = require('../../src')
 
 /** @typedef { import("ipfsd-ctl").ControllerOptions } ControllerOptions */
 
-describe('interface-ipfs-core tests', function () {
+describe.only('interface-ipfs-core tests', function () {
   /** @type ControllerOptions */
   const commonOptions = {
     test: true,

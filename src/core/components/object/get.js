@@ -2,6 +2,7 @@
 
 const CID = require('cids')
 const errCode = require('err-code')
+const { withTimeoutOption } = require('../../utils')
 
 function normalizeMultihash (multihash, enc) {
   if (typeof multihash === 'string') {
@@ -18,7 +19,7 @@ function normalizeMultihash (multihash, enc) {
 }
 
 module.exports = ({ ipld, preload }) => {
-  return async function get (multihash, options) { // eslint-disable-line require-await
+  return withTimeoutOption(async function get (multihash, options) { // eslint-disable-line require-await
     options = options || {}
 
     let mh, cid
@@ -43,6 +44,6 @@ module.exports = ({ ipld, preload }) => {
       preload(cid)
     }
 
-    return ipld.get(cid)
-  }
+    return ipld.get(cid, { signal: options.signal })
+  })
 }

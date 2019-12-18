@@ -9,11 +9,11 @@ const pEvent = require('p-event')
 // We need to detect when a readLock or writeLock is requested for the tests
 // so we override the Mutex class to emit an event
 const EventEmitter = require('events')
-const Mutex = require('../../src/utils/mutex')
+// const Mutex = require('../../src/utils/mutex')
 
-class MutexEmitter extends Mutex {
+class MutexEmitter /* extends Mutex */ {
   constructor (repoOwner) {
-    super(repoOwner)
+    // super(repoOwner)
     this.emitter = new EventEmitter()
   }
 

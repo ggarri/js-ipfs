@@ -6,11 +6,8 @@ const { expect } = require('interface-ipfs-core/src/utils/mocha')
 const path = require('path')
 const parallel = require('async/parallel')
 
-const IPFSFactory = require('ipfsd-ctl')
-const f = IPFSFactory.create({
-  type: 'js',
-  IpfsClient: require('ipfs-http-client')
-})
+const factory = require('../utils/factory')
+const df = factory()
 
 const config = {
   Bootstrap: [],
@@ -24,7 +21,7 @@ const config = {
   }
 }
 
-const createNode = () => f.spawn({
+const createNode = () => df.spawn({
   exec: path.resolve(`${__dirname}/../../src/cli/bin.js`),
   config,
   initOptions: { bits: 512 },
