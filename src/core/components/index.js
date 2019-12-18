@@ -31,6 +31,7 @@ exports.get = require('./get')
 exports.id = require('./id')
 exports.init = require('./init')
 exports.isOnline = require('./is-online')
+exports.libp2p = require('./libp2p')
 exports.ls = require('./ls')
 exports.name = {
   publish: require('./name/publish'),
@@ -81,5 +82,10 @@ exports.swarm = {
 exports.version = require('./version')
 
 exports.legacy = { // TODO: these will be removed as the new API is completed
+<<<<<<< HEAD
   libp2p: require('./libp2p')
+=======
+  dag: require('./dag'),
+  pin: require('./pin')
+>>>>>>> a7c14b72... refactor: update libp2p config, component and startup to use async
 }

@@ -1,7 +1,6 @@
 'use strict'
 
 const Bitswap = require('ipfs-bitswap')
-const PeerBook = require('peer-book')
 const IPNS = require('../ipns')
 const routingConfig = require('../ipns/routing/config')
 const defer = require('p-defer')
@@ -33,14 +32,13 @@ module.exports = ({
 
     const config = await repo.config.get()
 
-    const peerBook = new PeerBook()
-    const libp2p = Components.legacy.libp2p({
-      _options: constructorOptions,
-      _repo: repo,
-      _peerInfo: peerInfo,
-      _peerInfoBook: peerBook,
-      _print: print
-    }, config)
+    const libp2p = Components.libp2p({
+      options: constructorOptions,
+      repo,
+      peerInfo,
+      print,
+      config
+    })
 
     await libp2p.start()
 
