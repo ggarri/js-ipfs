@@ -1,8 +1,6 @@
 'use strict'
 
 const { createFromPrivKey } = require('peer-id')
-const promisify = require('promisify-es6')
-
 const errcode = require('err-code')
 const debug = require('debug')
 const log = debug('ipfs:ipns')
@@ -29,7 +27,7 @@ class IPNS {
     try {
       value = normalizePath(value)
 
-      const peerId = await promisify(createFromPrivKey)(privKey.bytes)
+      const peerId = await createFromPrivKey(privKey.bytes)
       await this.publisher.publishWithEOL(privKey, value, lifetime)
 
       log(`IPNS value ${value} was published correctly`)

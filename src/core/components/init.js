@@ -129,7 +129,7 @@ module.exports = ({
     // FIXME: resolve this circular dependency
     dag.put = Components.dag.put({ ipld, pin, gcLock, preload })
 
-    const add = Components.add({ ipld, dag, preload, pin, gcLock, constructorOptions })
+    const add = Components.add({ ipld, dag, preload, pin, gcLock, options: constructorOptions })
 
     if (!isInitialized && !options.emptyRepo) {
       // add empty unixfs dir object (go-ipfs assumes this exists)
@@ -143,7 +143,7 @@ module.exports = ({
       // This is primarily used for offline ipns modifications, such as the initializeKeyspace feature.
       const offlineDatastore = new OfflineDatastore(repo)
       const ipns = new IPNS(offlineDatastore, repo.datastore, peerInfo, keychain, { pass: options.pass })
-      await ipns.initializeKeyspace(peerId.privKey.bytes, emptyDirCid.toString())
+      await ipns.initializeKeyspace(peerId.privKey, emptyDirCid.toString())
     }
 
     const api = createApi({

@@ -90,7 +90,7 @@ function preloadFile (preload, opts) {
       const shouldPreload = isRootFile && !opts.onlyHash && opts.preload !== false
 
       if (shouldPreload) {
-        preload(file.hash)
+        preload(file.cid)
       }
 
       yield file
@@ -109,7 +109,7 @@ function pinFile (pin, opts) {
       if (shouldPin) {
         // Note: addAsyncIterator() has already taken a GC lock, so tell
         // pin.add() not to take a (second) GC lock
-        await pin.add(file.hash, {
+        await pin.add(file.cid, {
           preload: false,
           lock: false
         })
