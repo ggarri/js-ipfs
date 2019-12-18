@@ -2,11 +2,11 @@
 
 const WS = require('libp2p-websockets')
 const WebRTCStar = require('libp2p-webrtc-star')
-const Multiplex = require('pull-mplex')
+const Multiplex = require('libp2p-mplex')
 const SECIO = require('libp2p-secio')
-const Bootstrap = require('libp2p-bootstrap')
 const KadDHT = require('libp2p-kad-dht')
 const GossipSub = require('libp2p-gossipsub')
+const ipnsUtils = require('../ipns/routing/utils')
 
 module.exports = () => {
   return {
@@ -27,9 +27,7 @@ module.exports = () => {
         SECIO
       ],
       peerDiscovery: [
-        wrtcstar.discovery,
-        wsstar.discovery,
-        Bootstrap
+        WebRTCStar
       ],
       dht: KadDHT,
       pubsub: GossipSub
@@ -48,7 +46,17 @@ module.exports = () => {
         }
       },
       dht: {
-        enabled: false
+        kBucketSize: 20,
+        enabled: false,
+        randomWalk: {
+          enabled: false
+        },
+        validators: {
+          ipns: ipnsUtils.validator
+        },
+        selectors: {
+          ipns: ipnsUtils.selector
+        }
       },
       pubsub: {
         enabled: true,

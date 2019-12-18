@@ -80,12 +80,3 @@ exports.swarm = {
   peers: require('./swarm/peers')
 }
 exports.version = require('./version')
-
-exports.legacy = { // TODO: these will be removed as the new API is completed
-<<<<<<< HEAD
-  libp2p: require('./libp2p')
-=======
-  dag: require('./dag'),
-  pin: require('./pin')
->>>>>>> a7c14b72... refactor: update libp2p config, component and startup to use async
-}
