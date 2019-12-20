@@ -47,7 +47,7 @@ module.exports = ({ pinManager, gcLock, dag, object }) => {
 
       // update the pin sets in memory
       const pinset = recursive ? pinManager.recursivePins : pinManager.directPins
-      results.forEach(key => pinset.add(key))
+      results.forEach(cid => pinset.add(cid.toString()))
 
       // persist updated pin sets to datastore
       await pinManager.flushPins()
