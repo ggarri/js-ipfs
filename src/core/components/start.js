@@ -214,11 +214,11 @@ function createApi ({
       repo
     }),
     swarm: {
-      addrs: () => Components.swarm.addrs({ libp2p }),
-      connect: () => Components.swarm.connect({ libp2p }),
-      disconnect: () => Components.swarm.disconnect({ libp2p }),
+      addrs: Components.swarm.addrs({ libp2p }),
+      connect: Components.swarm.connect({ libp2p }),
+      disconnect: Components.swarm.disconnect({ libp2p }),
       localAddrs: Components.swarm.localAddrs({ peerInfo }),
-      peers: () => Components.swarm.peers({ libp2p })
+      peers: Components.swarm.peers({ libp2p })
     },
     version: Components.version({ repo })
   }
