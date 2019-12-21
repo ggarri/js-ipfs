@@ -70,7 +70,8 @@ module.exports = ({ dns, ipns, peerInfo, isOnline, options: constructorOptions }
     } catch (err) {
       // lets check if we have a domain ex. /ipns/ipfs.io and resolve with dns
       if (isDomain(hash)) {
-        return appendRemainder(dns(hash, options), remainder)
+        yield appendRemainder(dns(hash, options), remainder)
+        return
       }
 
       log.error(err)
