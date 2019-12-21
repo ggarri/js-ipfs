@@ -339,6 +339,15 @@ function createApi ({
     id: Components.id({ peerInfo }),
     init: () => { throw new AlreadyInitializedError() },
     isOnline: Components.isOnline({}),
+    key: {
+      export: Components.key.export({ keychain }),
+      gen: Components.key.gen({ keychain }),
+      import: Components.key.import({ keychain }),
+      info: Components.key.info({ keychain }),
+      list: Components.key.list({ keychain }),
+      rename: Components.key.rename({ keychain }),
+      rm: Components.key.rm({ keychain })
+    },
     ls: Components.ls({ ipld, preload }),
     object,
     pin,

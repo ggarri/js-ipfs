@@ -31,6 +31,15 @@ exports.get = require('./get')
 exports.id = require('./id')
 exports.init = require('./init')
 exports.isOnline = require('./is-online')
+exports.key = {
+  export: require('./key/export'),
+  gen: require('./key/gen'),
+  import: require('./key/import'),
+  info: require('./key/info'),
+  list: require('./key/list'),
+  rename: require('./key/rename'),
+  rm: require('./key/rm')
+}
 exports.libp2p = require('./libp2p')
 exports.ls = require('./ls')
 exports.name = {

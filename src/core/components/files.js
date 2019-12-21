@@ -173,6 +173,10 @@ module.exports = ({ ipld, blockService, repo, preload, options: constructorOptio
      * @param {ListOptions} [opts] - Options for list.
      * @returns {AsyncIterable<ListOutputFile>}
      */
-    ls: withPreload(methods.ls)
+    ls: withPreload(async function * (...args) {
+      for await (const file of methods.ls(...args)) {
+        yield { ...file, size: file.size || 0 }
+      }
+    })
   }
 }
