@@ -32,6 +32,8 @@ module.exports = ({ pinManager, object }) => {
     }
 
     if (paths) {
+      paths = Array.isArray(paths) ? paths : [paths]
+
       // check the pinned state of specific hashes
       const cids = await resolvePath(object, paths)
 
