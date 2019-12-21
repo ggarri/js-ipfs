@@ -269,7 +269,7 @@ function createPeerId ({ privateKey, bits, print }) {
   }
 }
 
-async function addEmptyDir ({ dag }) {
+function addEmptyDir ({ dag }) {
   const node = new DAGNode(new UnixFs('directory').marshal())
   return dag.put(node, {
     version: 0,
@@ -309,15 +309,19 @@ function createApi ({
   print,
   repo
 }) {
+  const notStarted = async () => { // eslint-disable-line require-await
+    throw new NotStartedError()
+  }
+
   const refs = () => { throw new NotStartedError() }
   refs.local = Components.refs.local({ repo })
 
   const api = {
     add,
     bitswap: {
-      stat: () => Promise.reject(new NotStartedError()),
-      unwant: () => Promise.reject(new NotStartedError()),
-      wantlist: () => Promise.reject(new NotStartedError())
+      stat: notStarted,
+      unwant: notStarted,
+      wantlist: notStarted
     },
     bootstrap: {
       add: Components.bootstrap.add({ repo }),
@@ -337,7 +341,7 @@ function createApi ({
     files: Components.files({ ipld, blockService, repo, preload, options: constructorOptions }),
     get: Components.get({ ipld, preload }),
     id: Components.id({ peerInfo }),
-    init: () => { throw new AlreadyInitializedError() },
+    init: async () => { throw new AlreadyInitializedError() }, // eslint-disable-line require-await
     isOnline: Components.isOnline({}),
     key: {
       export: Components.key.export({ keychain }),
@@ -377,17 +381,17 @@ function createApi ({
       repo
     }),
     stats: {
-      bitswap: () => { throw new NotStartedError() },
-      bw: () => { throw new NotStartedError() },
+      bitswap: notStarted,
+      bw: notStarted,
       repo: Components.repo.stat({ repo })
     },
     stop: () => apiManager.api,
     swarm: {
-      addrs: () => { throw new NotStartedError() },
-      connect: () => { throw new NotStartedError() },
-      disconnect: () => { throw new NotStartedError() },
+      addrs: notStarted,
+      connect: notStarted,
+      disconnect: notStarted,
       localAddrs: Components.swarm.localAddrs({ peerInfo }),
-      peers: () => { throw new NotStartedError() }
+      peers: notStarted
     },
     version: Components.version({ repo })
   }

@@ -1,3 +1,5 @@
+'use strict'
+
 class NotInitializedError extends Error {
   constructor (message = 'not initialized') {
     super(message)

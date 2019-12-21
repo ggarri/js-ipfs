@@ -147,6 +147,20 @@ function createApi ({
   const refs = Components.refs({ ipld, resolve, preload })
   refs.local = Components.refs.local({ repo })
 
+  const pubsubNotEnabled = async () => { // eslint-disable-line require-await
+    throw new NotEnabledError('pubsub not enabled')
+  }
+
+  const pubsub = libp2p.pubsub
+    ? Components.pubsub({ libp2p })
+    : {
+      subscribe: pubsubNotEnabled,
+      unsubscribe: pubsubNotEnabled,
+      publish: pubsubNotEnabled,
+      ls: pubsubNotEnabled,
+      peers: pubsubNotEnabled
+    }
+
   const api = {
     add,
     bitswap: {
@@ -172,7 +186,7 @@ function createApi ({
     files: Components.files({ ipld, blockService, repo, preload, options: constructorOptions }),
     get: Components.get({ ipld, preload }),
     id: Components.id({ peerInfo }),
-    init: () => { throw new AlreadyInitializedError() },
+    init: async () => { throw new AlreadyInitializedError() }, // eslint-disable-line require-await
     isOnline,
     key: {
       export: Components.key.export({ keychain }),
@@ -188,9 +202,7 @@ function createApi ({
     object,
     pin,
     ping: Components.ping({ libp2p }),
-    pubsub: libp2p.pubsub
-      ? Components.pubsub({ libp2p })
-      : () => { throw new NotEnabledError('pubsub not enabled') },
+    pubsub,
     refs,
     repo: {
       // TODO: this PR depends on `refs` refactor and the `pins` refactor

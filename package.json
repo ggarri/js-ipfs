@@ -130,7 +130,7 @@
     "kind-of": "^6.0.2",
     "ky": "^0.15.0",
     "ky-universal": "~0.3.0",
-    "libp2p": "^0.27.0-pre.1",
+    "libp2p": "github:libp2p/js-libp2p#refactor/async-await",
     "libp2p-bootstrap": "^0.10.2",
     "libp2p-crypto": "^0.17.1",
     "libp2p-delegated-content-routing": "^0.4.1",

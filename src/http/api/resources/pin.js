@@ -53,7 +53,7 @@ exports.ls = {
     return { path: request.query.arg, type }
   },
 
-  async handler (request, h) {
+  handler (request, h) {
     const { ipfs } = request.server.app
     const { path, type } = request.pre.args
 

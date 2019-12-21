@@ -45,7 +45,7 @@ async function create (options) {
     init: Components.init({ apiManager, print, options }),
     dns: Components.dns(),
     isOnline: Components.isOnline({})
-  }, () => { throw new NotInitializedError() })
+  }, async () => { throw new NotInitializedError() }) // eslint-disable-line require-await
 
   if (!options.init) {
     return api
