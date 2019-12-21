@@ -9,7 +9,7 @@ module.exports = ({ ipns, options: constructorOptions }) => {
    * @param {function(Error)} [callback]
    * @returns {Promise<string[]>}
    */
-  return function subs () {
+  return async function subs () { // eslint-disable-line require-await
     const pubsub = getPubsubRouting(ipns, constructorOptions)
     return pubsub.getSubscriptions()
   }

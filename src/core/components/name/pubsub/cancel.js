@@ -10,7 +10,7 @@ module.exports = ({ ipns, options: constructorOptions }) => {
    * @param {function(Error)} [callback]
    * @returns {Promise<{ canceled: boolean }>}
    */
-  return function cancel (name) {
+  return async function cancel (name) { // eslint-disable-line require-await
     const pubsub = getPubsubRouting(ipns, constructorOptions)
     return pubsub.cancel(name)
   }
