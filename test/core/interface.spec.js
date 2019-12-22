@@ -32,7 +32,12 @@ describe.only('interface-ipfs-core tests', function () {
   }
   const commonFactory = createFactory(commonOptions, overrides)
 
-  tests.root(commonFactory)
+  tests.root(commonFactory, {
+    skip: [{
+      name: 'should ignore a directory from the file system',
+      reason: 'FIXME: unixfs importer returns an extra QmUNLLs dir first (seems to be fixed in 0.42)'
+    }]
+  })
 
   tests.bitswap(commonFactory)
 

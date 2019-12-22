@@ -27,7 +27,7 @@ module.exports = ({ libp2p }) => {
 
     for (let i = 0; i < options.count; i++) {
       try {
-        const time = libp2p.ping(peerInfo)
+        const time = await libp2p.ping(peerInfo)
         totalTime += time
         packetCount++
         yield { ...basePacket, time }
