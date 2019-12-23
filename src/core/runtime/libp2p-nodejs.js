@@ -63,6 +63,9 @@ module.exports = () => {
         enabled: true,
         emitSelf: true
       }
+    },
+    metrics: {
+      enabled: true
     }
   }
 }

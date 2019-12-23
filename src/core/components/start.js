@@ -216,7 +216,11 @@ function createApi ({
     start: () => apiManager.api,
     stats: {
       bitswap: Components.bitswap.stat({ bitswap }),
-      bw: Components.stats.bw({ libp2p }),
+      bw: libp2p.metrics
+        ? Components.stats.bw({ libp2p })
+        : async () => { // eslint-disable-line require-await
+          throw new NotEnabledError('libp2p metrics not enabled')
+        },
       repo: Components.repo.stat({ repo })
     },
     stop: Components.stop({
