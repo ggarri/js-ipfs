@@ -28,10 +28,10 @@ const { cidToString } = require('../../utils/cid')
 /**
  * IPFS Resolve factory
  *
- * @param {IPFS} ipfs
+ * @param {{ ipld: IPLD, name?: NameApi }}
  * @returns {ResolveWrapper}
  */
-module.exports = ({ name, ipld }) => {
+module.exports = ({ ipld, name }) => {
   /**
    * IPFS Resolve - Resolve the value of names to IPFS
    *
@@ -47,6 +47,10 @@ module.exports = ({ name, ipld }) => {
     }
 
     if (isIpfs.ipnsPath(path)) {
+      if (!name) {
+        throw new Error('failed to resolve IPNS path: name API unavailable')
+      }
+
       for await (const resolvedPath of name.resolve(path, opts)) {
         path = resolvedPath
       }

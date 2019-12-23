@@ -205,10 +205,7 @@ function createApi ({
     pubsub,
     refs,
     repo: {
-      // TODO: this PR depends on `refs` refactor and the `pins` refactor
-      // https://github.com/ipfs/js-ipfs/pull/2658
-      // https://github.com/ipfs/js-ipfs/pull/2660
-      // gc: Commands.repo.gc({ gcLock, pin, pinManager, refs, repo }),
+      gc: Components.repo.gc({ gcLock, pin, pinManager, refs, repo }),
       stat: Components.repo.stat({ repo }),
       version: Components.repo.version({ repo })
     },

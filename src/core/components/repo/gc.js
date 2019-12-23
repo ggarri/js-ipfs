@@ -22,7 +22,7 @@ module.exports = ({ gcLock, pin, pinManager, refs, repo }) => {
 
     try {
       // Mark all blocks that are being used
-      const markedSet = await createMarkedSet({ pin, pinManager, repo })
+      const markedSet = await createMarkedSet({ pin, pinManager, refs, repo })
       // Get all blocks keys from the blockstore
       const blockKeys = repo.blocks.query({ keysOnly: true })
 
@@ -38,21 +38,17 @@ module.exports = ({ gcLock, pin, pinManager, refs, repo }) => {
 
 // Get Set of CIDs of blocks to keep
 async function createMarkedSet ({ pin, pinManager, refs, repo }) {
-  const pinsSource = map(({ hash }) => hash, pin.ls())
+  const pinsSource = map(({ cid }) => cid, pin.ls())
 
-  const pinInternalsSource = async function * () {
+  const pinInternalsSource = (async function * () {
     const cids = await pinManager.getInternalBlocks()
     yield * cids
-  }
+  })()
 
-  const mfsSource = async function * () {
-    const mh = await repo.root.get(MFS_ROOT_KEY)
-    const rootCid = new CID(mh)
-    yield rootCid
+  const mfsSource = (async function * () {
+    let mh
     try {
-      for await (const { ref } of refs(rootCid, { recursive: true })) {
-        yield new CID(ref)
-      }
+      mh = await repo.root.get(MFS_ROOT_KEY)
     } catch (err) {
       if (err.code === ERR_NOT_FOUND) {
         log('No blocks in MFS')
@@ -60,7 +56,14 @@ async function createMarkedSet ({ pin, pinManager, refs, repo }) {
       }
       throw err
     }
-  }
+
+    const rootCid = new CID(mh)
+    yield rootCid
+
+    for await (const { ref } of refs(rootCid, { recursive: true })) {
+      yield new CID(ref)
+    }
+  })()
 
   const output = new Set()
   for await (const cid of parallelMerge(pinsSource, pinInternalsSource, mfsSource)) {

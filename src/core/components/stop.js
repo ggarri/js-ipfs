@@ -103,7 +103,8 @@ function createApi ({
   // FIXME: resolve this circular dependency
   dag.put = Components.dag.put({ ipld, pin, gcLock, preload })
   const add = Components.add({ ipld, dag, preload, pin, gcLock, options: constructorOptions })
-  const refs = () => { throw new NotStartedError() }
+  const resolve = Components.resolve({ ipld })
+  const refs = Components.refs({ ipld, resolve, preload })
   refs.local = Components.refs.local({ repo })
 
   const notStarted = async () => { // eslint-disable-line require-await
@@ -153,15 +154,11 @@ function createApi ({
     pin,
     refs,
     repo: {
-      // TODO: gc should be available when stopped
-      // `resolve` (passed to `refs` API) which is a dependency for `gc` API
-      // needs to be altered to allow `name` API dependency to be optional, so
-      // that `resolve` can also be available when not started, and so `gc` can
-      // be run when not started.
-      // gc: Commands.repo.gc({ gcLock, pin, pinManager, refs, repo }),
+      gc: Components.repo.gc({ gcLock, pin, pinManager, refs, repo }),
       stat: Components.repo.stat({ repo }),
       version: Components.repo.version({ repo })
     },
+    resolve,
     start: Components.start({
       apiManager,
       options: constructorOptions,
