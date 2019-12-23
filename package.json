@@ -122,6 +122,7 @@
     "is-stream": "^2.0.0",
     "iso-url": "~0.4.6",
     "it-all": "^1.0.1",
+    "it-concat": "^1.0.0",
     "it-pipe": "^1.0.1",
     "it-to-stream": "^0.1.1",
     "iterable-ndjson": "^1.1.0",

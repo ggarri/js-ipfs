@@ -8,7 +8,7 @@ const IPFS = require('../../src')
 
 /** @typedef { import("ipfsd-ctl").ControllerOptions } ControllerOptions */
 
-describe.only('interface-ipfs-core tests', function () {
+describe('interface-ipfs-core tests', function () {
   /** @type ControllerOptions */
   const commonOptions = {
     test: true,
@@ -75,14 +75,7 @@ describe.only('interface-ipfs-core tests', function () {
     }
   }), overrides))
 
-  tests.object(commonFactory, {
-    skip: [
-      {
-        name: 'should respect timeout option',
-        reason: 'js-ipfs doesn\'t support timeout yet'
-      }
-    ]
-  })
+  tests.object(commonFactory)
 
   tests.pin(commonFactory)
 
@@ -117,5 +110,5 @@ describe.only('interface-ipfs-core tests', function () {
 
   tests.stats(commonFactory)
 
-  tests.swarm(commonFactory)
+  tests.swarm(commonFactory, { skip: true })
 })

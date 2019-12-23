@@ -3,7 +3,6 @@
 
 const tests = require('interface-ipfs-core')
 const merge = require('merge-options')
-const { isNode } = require('ipfs-utils/src/env')
 const { createFactory } = require('ipfsd-ctl')
 const IPFS = require('../../src')
 
@@ -34,6 +33,13 @@ describe('interface-ipfs-core over ipfs-http-client tests', function () {
   }
   const commonFactory = createFactory(commonOptions, overrides)
 
+  tests.root(commonFactory, {
+    skip: [{
+      name: 'should ignore a directory from the file system',
+      reason: 'FIXME: unixfs importer returns an extra QmUNLLs dir first (seems to be fixed in 0.42)'
+    }]
+  })
+
   tests.bitswap(commonFactory)
 
   tests.block(commonFactory)
@@ -42,15 +48,7 @@ describe('interface-ipfs-core over ipfs-http-client tests', function () {
 
   tests.config(commonFactory)
 
-  tests.dag(commonFactory, {
-    skip: [{
-      name: 'should get only a CID, due to resolving locally only',
-      reason: 'Local resolve option is not implemented yet'
-    }, {
-      name: 'tree',
-      reason: 'dag.tree is not implemented yet'
-    }]
-  })
+  tests.dag(commonFactory)
 
   tests.dht(commonFactory, {
     skip: {
@@ -58,17 +56,7 @@ describe('interface-ipfs-core over ipfs-http-client tests', function () {
     }
   })
 
-  tests.filesRegular(commonFactory, {
-    skip: isNode ? null : [{
-      name: 'addFromStream',
-      reason: 'Not designed to run in the browser'
-    }, {
-      name: 'addFromFs',
-      reason: 'Not designed to run in the browser'
-    }]
-  })
-
-  tests.filesMFS(commonFactory)
+  tests.files(commonFactory)
 
   tests.key(commonFactory)
 
@@ -76,7 +64,6 @@ describe('interface-ipfs-core over ipfs-http-client tests', function () {
 
   tests.name(createFactory(merge(commonOptions, {
     ipfsOptions: {
-      pass: 'ipfs-is-awesome-software',
       offline: true
     }
   }), overrides))
@@ -105,5 +92,5 @@ describe('interface-ipfs-core over ipfs-http-client tests', function () {
 
   tests.stats(commonFactory)
 
-  tests.swarm(commonFactory)
+  tests.swarm(commonFactory, { skip: true })
 })

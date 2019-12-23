@@ -16,7 +16,8 @@ const multiaddr = require('multiaddr')
 const {
   AlreadyInitializingError,
   AlreadyInitializedError,
-  NotStartedError
+  NotStartedError,
+  NotEnabledError
 } = require('../errors')
 const BlockService = require('ipfs-block-service')
 const Ipld = require('ipld')
@@ -67,6 +68,10 @@ module.exports = ({
           throw err
         }
       }
+    }
+
+    if (!isInitialized && options.allowNew === false) {
+      throw new NotEnabledError('new repo initialization is not enabled')
     }
 
     const { peerId, config, keychain } = isInitialized
