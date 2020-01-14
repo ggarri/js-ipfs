@@ -110,10 +110,10 @@ function getLibp2pOptions ({ options, config, datastore, peerInfo, peerBook }) {
       },
       relay: {
         enabled: get(options, 'relay.enabled',
-          get(config, 'relay.enabled', true)),
+          !get(config, 'Swarm.DisableRelay', false)),
         hop: {
           enabled: get(options, 'relay.hop.enabled',
-            get(config, 'relay.hop.enabled', false)),
+            get(config, 'Swarm.EnableRelayHop', false)),
           active: get(options, 'relay.hop.active',
             get(config, 'relay.hop.active', false))
         }

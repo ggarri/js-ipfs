@@ -79,7 +79,9 @@ const configSchema = s({
       ConnMgr: optional(s({
         LowWater: 'number?',
         HighWater: 'number?'
-      }))
+      })),
+      EnableRelayHop: 'boolean?',
+      DisableRelay: 'boolean?',
     }))
   })),
   ipld: 'object?',
